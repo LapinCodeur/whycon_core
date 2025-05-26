@@ -114,7 +114,7 @@ void CRawImage::drawGuideCalibration(int calib_num, float dim_x, float dim_y)
 
     int font_face = cv::FONT_HERSHEY_SIMPLEX;
     double font_scale = 1;
-    int thickness = 1;
+    int thickness = 2;
     int baseline = 0;
     cv::Scalar text_color(0, 255, 0);
     cv::Scalar rect_color(0, 0, 0);

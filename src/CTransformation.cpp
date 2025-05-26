@@ -15,17 +15,15 @@
 namespace whycon {
 
 CTransformation::CTransformation(float circle_diam, bool debug) :
-    transform_type_(TRANSFORM_NONE),
-    circle_diameter_(circle_diam),
-    debug(debug)
-{
-    intrinsic_mat_ = cv::Mat::eye(3,3, CV_32FC1);
-    distortion_coeffs_ = cv::Mat::zeros(1,5, CV_32FC1);
-}
+    transform_type_(TRANSFORM_NONE)
+    , circle_diameter_(circle_diam)
+    , intrinsic_mat_(cv::Mat::eye(3,3, CV_32FC1))
+    , distortion_coeffs_(cv::Mat::zeros(1,5, CV_32FC1))
+    , debug(debug)
+{}
 
 CTransformation::~CTransformation()
-{
-}
+{}
 
 void CTransformation::setTransformType(const ETransformType trans_type)
 {
@@ -99,9 +97,9 @@ void CTransformation::transformXY(float &x, float &y)
 void CTransformation::transform2D(STrackedObject &o)
 {
     // transformation of position
-    float x = hom_[0] * o.x + hom_[1] * o.y + hom_[2];
-    float y = hom_[3] * o.x + hom_[4] * o.y + hom_[5];
-    float z = hom_[6] * o.x + hom_[7] * o.y + hom_[8];
+    float x = hom_[0] * (-o.y / o.x) + hom_[1] * (-o.z / o.x) + hom_[2];
+    float y = hom_[3] * (-o.y / o.x) + hom_[4] * (-o.z / o.x) + hom_[5];
+    float z = hom_[6] * (-o.y / o.x) + hom_[7] * (-o.z / o.x) + hom_[8];
 
     o.x = x / z;
     o.y = y / z;
@@ -194,7 +192,7 @@ void CTransformation::loadCalibration(const std::string &str)
         }
         cv::FileStorage fs(str, cv::FileStorage::READ);
         if(!fs.isOpened())
-            throw std::runtime_error("Could not open/load calibration file.");
+            throw std::runtime_error("Could not open/load calibration file. " + str);
 
         fs["dim_x"] >> grid_dim_x_;
         fs["dim_y"] >> grid_dim_y_;
@@ -242,7 +240,7 @@ void CTransformation::saveCalibration(const std::string &str)
     {
         cv::FileStorage fs(str, cv::FileStorage::WRITE);
         if(!fs.isOpened())
-            throw std::runtime_error("Could not open/create calibration file.");
+            throw std::runtime_error("Could not open/create calibration file. " + str);
 
         fs.writeComment("Dimensions");
         fs << "dim_x" << grid_dim_x_;
