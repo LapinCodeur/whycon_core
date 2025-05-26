@@ -592,7 +592,7 @@ void CTransformation::calcQuaternion(STrackedObject &obj)
     // final_norm[1] = rot_y;
     // final_norm[2] = rot_z;
 
-    float new_angle = obj.angle + 0.2;
+    float new_angle = obj.angle;
     if(new_angle > M_PI)
         new_angle = new_angle - 2 * M_PI;
     // std::printf("angle %f new angle %f\n", obj.angle, new_angle);
@@ -608,7 +608,7 @@ void CTransformation::calcQuaternion(STrackedObject &obj)
     hamilton_product(qx2, qy2, qz2, qw2, qx1, qy1, qz1, qw1, qx3, qy3, qz3, qw3);
 
     normalize_quaternion(qx3, qy3, qz3, qw3);
-    
+
     hamilton_product(qx3, qy3, qz3, qw3, 0.0, 0.0, 1.0, 0.0, qx1, qy1, qz1, qw1);
     // std::printf("q3 %f %f %f %f norm %f\n", qx3, qy3, qz3, qw3, quaternion_norm(qx3, qy3, qz3, qw3));
     normalize_quaternion(qx1, qy1, qz1, qw1);
